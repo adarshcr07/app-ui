@@ -1,20 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app_ui/authentication.dart';
+import 'package:first_app_ui/view/loginpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({Key? key, required User user})
+      : udata = user,
+        super(key: key);
+  final User udata;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late User udata;
+
+  bool Signout = false;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Column(
           children: [
             Container(
@@ -357,15 +367,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
+              /*const UserAccountsDrawerHeader(
                 decoration:
                     BoxDecoration(color: Color.fromARGB(255, 114, 210, 255)),
-                child: Icon(
-                  CupertinoIcons.person,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  size: 56,
-                ),
-              ),
+                accountName: null,
+                accountEmail: Text(' ${udata.email!} '),
+                //here the userprofile image icon and name as text
+              ),*/
               ListTile(
                 leading: Icon(
                   Icons.account_circle_rounded,
@@ -391,20 +399,36 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  "Log out",
-                  style: GoogleFonts.barlow(
-                      textStyle: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  )),
-                ),
-                leading: Icon(
-                  Icons.logout_rounded,
-                  color: Colors.black,
-                ),
-              )
+              Signout
+                  ? CircularProgressIndicator()
+                  : ListTile(
+                      onTap: () async {
+                        setState(() {
+                          Signout = true;
+                        });
+
+                        await Authentication.signOut(context: context);
+
+                        setState(() {
+                          Signout = false;
+                        });
+
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => Loginpage()));
+                      },
+                      title: Text(
+                        "Sign out",
+                        style: GoogleFonts.barlow(
+                            textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                      ),
+                      leading: Icon(
+                        Icons.logout_rounded,
+                        color: Colors.black,
+                      ),
+                    )
             ],
           ),
         ),
@@ -445,7 +469,6 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage('images/compass.png'),
-                size: 8,
               ),
               label: 'World',
             ),
