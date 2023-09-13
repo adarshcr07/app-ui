@@ -1,4 +1,5 @@
 //import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:first_app_ui/authentication.dart';
 import 'package:first_app_ui/services/loginpageprovider.dart';
 //import 'package:first_app_ui/view/homepage.dart';
@@ -16,7 +17,7 @@ class Loginpage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 187, 187, 187),
       //consumer here
-      body: Consumer<LoginpageProvider>(builder: (context, value, child) {
+      body: Consumer<LoginpageProvider>(builder: (context, indicator, child) {
         return SafeArea(
           child: Padding(
             padding: EdgeInsets.only(
@@ -62,15 +63,67 @@ class Loginpage extends StatelessWidget {
                         ))
                   ],
                 )),
+                SizedBox(
+                  height: 1,
+                ),
+                //Phonenumber fieald
+                TextFormField(
+                  controller: indicator.Numbercontroller,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(30),
+                        ),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.phone_iphone,
+                        color: Colors.cyan,
+                      ),
+                      hintStyle: new TextStyle(
+                          color: const Color.fromARGB(255, 255, 255, 255)),
+                      hintText: "Enter Your Phone Number...",
+                      fillColor: Colors.white70),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                //otp genarator
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(255, 255, 255, 255)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    indicator.phoneNumberAuthentication(
+                        indicator.Numbercontroller.text, context);
+                  },
+                  child: Text(
+                    "Generate OTP",
+                    style: TextStyle(color: Color.fromARGB(255, 255, 81, 81)),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+
                 //error causing widget
                 FutureBuilder(
                   future: Authentication.initializeFirebase(context: context),
-                  builder: (context, snapshot) {
+                  builder: (context, snapshot)
+
+                      //pass the firebase user data here!
+                      {
                     if (snapshot.hasError) {
                       return Text('Error initializing Firebase');
                     } else if (snapshot.connectionState ==
                         ConnectionState.done) {
-                      return value.SignInButton(context); //sign in code
+                      return indicator.SignInButton(context); //sign in code
                     }
 
                     return CircularProgressIndicator(
