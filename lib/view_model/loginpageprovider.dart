@@ -1,7 +1,7 @@
 //import 'dart:html';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_app_ui/authentication.dart';
+import 'package:first_app_ui/model/authentication.dart';
 import 'package:first_app_ui/view/homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -29,14 +29,14 @@ class LoginpageProvider extends ChangeNotifier {
               onPressed: () async {
                 _isSigningIn = true;
 
-                User? user =
+                User? currentuser =
                     await Authentication.signInWithGoogle(context: context);
 
                 _isSigningIn = false;
 
-                if (user != null) {
+                if (currentuser != null) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => MyHomePage(user: user)));
+                      builder: (context) => MyHomePage(user: currentuser)));
                 }
                 notifyListeners();
               },

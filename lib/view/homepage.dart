@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:first_app_ui/authentication.dart';
+import 'package:first_app_ui/model/authentication.dart';
 import 'package:first_app_ui/view/loginpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required User user})
+  MyHomePage({Key? key, required User user})
       : udata = user,
         super(key: key);
   final User udata;
@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late User udata;
+  late User udata = widget.udata;
 
   bool Signout = false;
 
@@ -367,13 +367,21 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              /*const UserAccountsDrawerHeader(
-                decoration:
-                    BoxDecoration(color: Color.fromARGB(255, 114, 210, 255)),
-                accountName: null,
-                accountEmail: Text(' ${udata.email!} '),
-                //here the userprofile image icon and name as text
-              ),*/
+              UserAccountsDrawerHeader(
+                  decoration:
+                      BoxDecoration(color: Color.fromARGB(255, 114, 210, 255)),
+                  accountName: Text('${udata.displayName}'),
+                  accountEmail: Text('${udata.email}'),
+                  //here the userprofile image icon and name as text
+                  currentAccountPicture: udata.photoURL != null
+                      ? Image.network(
+                          udata.photoURL!,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Handle the error by displaying a fallback image
+                            return FlutterLogo();
+                          },
+                        )
+                      : FlutterLogo()),
               ListTile(
                 leading: Icon(
                   Icons.account_circle_rounded,

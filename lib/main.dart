@@ -1,4 +1,4 @@
-import 'package:first_app_ui/services/loginpageprovider.dart';
+import 'package:first_app_ui/view_model/loginpageprovider.dart';
 //import 'package:first_app_ui/view/homepage.dart';
 import 'package:first_app_ui/view/loginpage.dart';
 import 'package:flutter/material.dart';
